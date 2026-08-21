@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Business Request | AI Business Automation</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #10213f;
+        }
+
+        .navbar {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #dce4ef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 42px;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .brand span {
+            color: #2864e8;
+        }
+
+        .back {
+            text-decoration: none;
+            color: #2864e8;
+            font-weight: 700;
+        }
+
+        .container {
+            width: min(850px, calc(100% - 40px));
+            margin: 55px auto;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #dce4ef;
+            border-radius: 18px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(16, 33, 63, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #607793;
+            margin-bottom: 32px;
+        }
+
+        .field {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cfd9e8;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #2864e8;
+        }
+
+        textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            border: 0;
+            background: #2864e8;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1e54c7;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 10px;
+            background: #f1f7ff;
+            border: 1px solid #cfe0ff;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #fff1f1;
+            border: 1px solid #f2c4c4;
+            color: #b42318;
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="brand">
+        AI <span>Business Automation</span>
+    </div>
+
+    <a href="/" class="back">
+        ← Back to Home
+    </a>
+
+</header>
+
+
+<main class="container">
+
+    <div class="card">
+
+        <h1>Submit Business Request</h1>
+
+        <p class="subtitle">
+            Submit your request and let the AI system analyze,
+            prioritize and process it automatically.
+        </p>
+
+
+        <form id="requestForm">
+
+            <div class="field">
+                <label for="customer_name">
+                    Customer Name
+                </label>
+
+                <input
+                    id="customer_name"
+                    name="customer_name"
+                    type="text"
+                    required
+                    maxlength="100"
+                    placeholder="Enter your name"
+                >
+            </div>
+
+
+            <div class="field">
+                <label for="customer_email">
+                    Customer Email
+                </label>
+
+                <input
+                    id="customer_email"
+                    name="customer_email"
+                    type="email"
+                    required
+                    placeholder="you@example.com"
+                >
+            </div>
+
+
+            <div class="field">
+                <label for="subject">
+                    Subject
+                </label>
+
+                <input
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    maxlength="200"
+                    placeholder="Request subject"
+                >
+            </div>
+
+
+            <div class="field">
+                <label for="message">
+                    Business Request
+                </label>
+
+                <textarea
+                    id="message"
+                    name="message"
+                    required
+                    placeholder="Describe your business request..."
+                ></textarea>
+            </div>
+
+
+            <button type="submit" id="submitBtn">
+                Submit & Analyze
+            </button>
+
+        </form>
+
+
+        <div id="errorBox" class="error"></div>
+
+        <div id="resultBox" class="result"></div>
+
+    </div>
+
+</main>
+
+
+<script>
+const form = document.getElementById("requestForm");
+const button = document.getElementById("submitBtn");
+const resultBox = document.getElementById("resultBox");
+const errorBox = document.getElementById("errorBox");
+
+form.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    resultBox.style.display = "none";
+    errorBox.style.display = "none";
+
+    button.disabled = true;
+    button.textContent = "Processing...";
+
+    const payload = {
+        customer_name: document
+            .getElementById("customer_name")
+            .value.trim(),
+
+        customer_email: document
+            .getElementById("customer_email")
+            .value.trim(),
+
+        subject: document
+            .getElementById("subject")
+            .value.trim(),
+
+        message: document
+            .getElementById("message")
+            .value.trim()
+    };
+
+    try {
+
+        const response = await fetch(
+            "/api/requests/",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(payload)
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail
+                    ? JSON.stringify(data.detail)
+                    : "Request submission failed."
+            );
+        }
+
+        /*
+         * Extract information returned by backend
+         */
+
+        const requestId =
+            data.request_id ||
+            data.request?.request_id ||
+            "Generated";
+
+        const status =
+            data.status ||
+            data.request?.status ||
+            data.automation?.status ||
+            "PROCESSING";
+
+        const priority =
+            data.ai_analysis?.priority ||
+            data.priority ||
+            data.request?.priority ||
+            "—";
+
+        const intent =
+            data.ai_analysis?.intent ||
+            data.intent ||
+            "—";
+
+
+        /*
+         * Save request locally so user can see
+         * their submitted request during this session.
+         */
+
+        const history = JSON.parse(
+            localStorage.getItem("xqora_requests") || "[]"
+        );
+
+        history.unshift({
+            request_id: requestId,
+            status: status,
+            priority: priority,
+            intent: intent,
+            created_at: new Date().toISOString()
+        });
+
+        localStorage.setItem(
+            "xqora_requests",
+            JSON.stringify(history.slice(0, 25))
+        );
+
+
+        /*
+         * Show success
+         */
+
+        resultBox.innerHTML = `
+            <div style="
+                background:#f0fdf4;
+                border:1px solid #bbf7d0;
+                border-radius:14px;
+                padding:22px;
+                color:#166534;
+            ">
+
+                <h3 style="
+                    margin:0 0 14px;
+                    font-size:20px;
+                ">
+                    ✓ Request Submitted Successfully
+                </h3>
+
+                <div style="
+                    display:grid;
+                    gap:8px;
+                    font-size:15px;
+                ">
+
+                    <div>
+                        <strong>Request ID:</strong>
+                        ${requestId}
+                    </div>
+
+                    <div>
+                        <strong>Status:</strong>
+                        ${status}
+                    </div>
+
+                    <div>
+                        <strong>Priority:</strong>
+                        ${priority}
+                    </div>
+
+                    <div>
+                        <strong>Intent:</strong>
+                        ${intent}
+                    </div>
+
+                </div>
+
+                <p style="
+                    margin:16px 0 0;
+                    color:#4b5563;
+                ">
+                    Your request has been received and is being
+                    processed by the AI automation system.
+                </p>
+
+            </div>
+        `;
+
+        resultBox.style.display = "block";
+
+        form.reset();
+
+    }
+
+    catch (error) {
+
+        errorBox.textContent =
+            error.message || "Unable to submit request.";
+
+        errorBox.style.display = "block";
+
+    }
+
+    finally {
+
+        button.disabled = false;
+        button.textContent = "Submit & Analyze";
+
+    }
+
+});
+</script>
+
+</body>
+</html>

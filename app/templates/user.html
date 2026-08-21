@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>User Portal | AI Business Automation</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        }
+
+        .card {
+            transition: all .2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, .08);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-900 min-h-screen">
+
+<!-- HEADER -->
+
+<header class="bg-slate-950 text-white">
+
+    <div class="max-w-7xl mx-auto px-6 py-5
+                flex items-center justify-between">
+
+        <div>
+            <h1 class="text-xl font-bold">
+                AI Business Automation
+            </h1>
+
+            <p class="text-sm text-slate-400">
+                Business Request Portal
+            </p>
+        </div>
+
+        <a href="/"
+           class="text-sm text-slate-300 hover:text-white">
+            ← Home
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- MAIN -->
+
+<main class="max-w-7xl mx-auto px-6 py-10">
+
+
+    <!-- HERO -->
+
+    <section class="mb-10">
+
+        <div class="bg-white rounded-3xl border p-8 lg:p-10">
+
+            <div class="max-w-3xl">
+
+                <span class="inline-flex px-3 py-1 rounded-full
+                             bg-blue-50 text-blue-700
+                             text-xs font-semibold">
+                    BUSINESS AUTOMATION PORTAL
+                </span>
+
+                <h2 class="text-3xl lg:text-4xl font-bold mt-4">
+                    Submit and track your business requests
+                </h2>
+
+                <p class="text-slate-500 mt-4 leading-7">
+                    Describe what you need in natural language.
+                    Our AI-powered automation system analyzes your
+                    request, determines the appropriate workflow and
+                    keeps you updated on its progress.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+
+
+        <!-- NEW REQUEST -->
+
+        <div class="card bg-white border rounded-2xl p-7">
+
+            <div class="w-12 h-12 rounded-xl
+                        bg-blue-50 text-blue-600
+                        flex items-center justify-center
+                        text-xl">
+                +
+            </div>
+
+            <h3 class="text-xl font-bold mt-5">
+                Submit a Request
+            </h3>
+
+            <p class="text-slate-500 text-sm mt-2 leading-6">
+                Tell us what you need. The AI system will analyze
+                your request and determine the next steps.
+            </p>
+
+            <a href="/web/"
+               class="inline-flex items-center justify-center
+                      mt-6 bg-slate-950 text-white
+                      rounded-xl px-5 py-3
+                      text-sm font-semibold
+                      hover:bg-slate-800 transition">
+                Create Business Request →
+            </a>
+
+        </div>
+
+
+        <!-- TRACK REQUEST -->
+
+        <div class="card bg-white border rounded-2xl p-7">
+
+            <div class="w-12 h-12 rounded-xl
+                        bg-green-50 text-green-600
+                        flex items-center justify-center
+                        text-xl">
+                ✓
+            </div>
+
+            <h3 class="text-xl font-bold mt-5">
+                Track a Request
+            </h3>
+
+            <p class="text-slate-500 text-sm mt-2 leading-6">
+                Already submitted a request? Check its current
+                processing status using your request ID.
+            </p>
+
+            <a href="#track"
+               class="inline-flex items-center justify-center
+                      mt-6 border border-slate-300
+                      text-slate-800 rounded-xl
+                      px-5 py-3 text-sm font-semibold
+                      hover:bg-slate-50 transition">
+                Check Request Status →
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- TRACKING -->
+
+    <section id="track"
+             class="bg-white border rounded-2xl p-7 lg:p-8">
+
+        <div class="mb-6">
+
+            <h2 class="text-2xl font-bold">
+                Request Status
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-1">
+                Enter your request ID to check its current status.
+            </p>
+
+        </div>
+
+
+        <form id="statusForm"
+              class="flex flex-col md:flex-row gap-3">
+
+            <input
+                id="requestId"
+                type="text"
+                required
+                placeholder="Example: REQ-12345678"
+                class="flex-1 rounded-xl border border-slate-300
+                       px-4 py-3 text-sm outline-none
+                       focus:border-blue-500
+                       focus:ring-2 focus:ring-blue-500/10"
+            >
+
+            <button
+                type="submit"
+                id="statusButton"
+                class="rounded-xl bg-blue-600
+                       hover:bg-blue-700 text-white
+                       px-6 py-3 text-sm
+                       font-semibold transition">
+                Check Status
+            </button>
+
+        </form>
+
+
+        <!-- STATUS RESULT -->
+
+        <div id="statusResult"
+             class="hidden mt-6">
+        </div>
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+
+    <section class="mt-10">
+
+        <div class="text-center mb-7">
+
+            <h2 class="text-2xl font-bold">
+                How It Works
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-2">
+                Simple request-to-resolution workflow
+            </p>
+
+        </div>
+
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+
+            <div class="bg-white border rounded-2xl p-6">
+
+                <div class="text-blue-600 font-bold text-sm">
+                    01
+                </div>
+
+                <h3 class="font-bold mt-3">
+                    Submit
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2">
+                    Describe your business requirement.
+                </p>
+
+            </div>
+
+
+            <div class="bg-white border rounded-2xl p-6">
+
+                <div class="text-blue-600 font-bold text-sm">
+                    02
+                </div>
+
+                <h3 class="font-bold mt-3">
+                    AI Analysis
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2">
+                    AI classifies and analyzes the request.
+                </p>
+
+            </div>
+
+
+            <div class="bg-white border rounded-2xl p-6">
+
+                <div class="text-blue-600 font-bold text-sm">
+                    03
+                </div>
+
+                <h3 class="font-bold mt-3">
+                    Processing
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2">
+                    The appropriate workflow is executed.
+                </p>
+
+            </div>
+
+
+            <div class="bg-white border rounded-2xl p-6">
+
+                <div class="text-green-600 font-bold text-sm">
+                    04
+                </div>
+
+                <h3 class="font-bold mt-3">
+                    Result
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-2">
+                    Track the outcome and request status.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- STATUS SCRIPT -->
+
+<script>
+
+const statusForm = document.getElementById("statusForm");
+const requestIdInput = document.getElementById("requestId");
+const statusResult = document.getElementById("statusResult");
+const statusButton = document.getElementById("statusButton");
+
+
+statusForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const requestId = requestIdInput.value.trim();
+
+    if (!requestId) {
+        return;
+    }
+
+
+    /* Loading state */
+
+    statusButton.disabled = true;
+    statusButton.textContent = "Checking...";
+
+    statusResult.className =
+        "mt-6 rounded-xl border bg-slate-50 p-5";
+
+    statusResult.innerHTML = `
+        <p class="text-sm text-slate-500">
+            Checking request status...
+        </p>
+    `;
+
+
+    try {
+
+        const response = await fetch(
+            "/api/requests/" +
+            encodeURIComponent(requestId)
+        );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+            statusResult.className =
+                "mt-6 rounded-xl border border-red-200 bg-red-50 p-5";
+
+            statusResult.innerHTML = `
+                <p class="font-semibold text-red-700">
+                    Request not found
+                </p>
+
+                <p class="text-sm text-red-600 mt-1">
+                    Please check the request ID and try again.
+                </p>
+            `;
+
+            return;
+        }
+
+
+        /*
+         * Backend may return the request directly
+         * or inside a "request" object.
+         */
+
+        const request =
+            data.request || data;
+
+
+        const status =
+            String(
+                request.status ||
+                "UNKNOWN"
+            );
+
+
+        const normalizedStatus =
+            status.toLowerCase();
+
+
+        /* STATUS COLOR */
+
+        let statusClass =
+            "bg-slate-100 text-slate-700";
+
+
+        if (
+            normalizedStatus === "completed" ||
+            normalizedStatus === "complete"
+        ) {
+
+            statusClass =
+                "bg-green-100 text-green-700";
+
+        }
+
+        else if (
+            normalizedStatus === "failed" ||
+            normalizedStatus === "error"
+        ) {
+
+            statusClass =
+                "bg-red-100 text-red-700";
+
+        }
+
+        else if (
+            normalizedStatus === "processing" ||
+            normalizedStatus === "in_progress"
+        ) {
+
+            statusClass =
+                "bg-blue-100 text-blue-700";
+
+        }
+
+        else if (
+            normalizedStatus === "pending" ||
+            normalizedStatus === "pending_review" ||
+            normalizedStatus === "awaiting_review"
+        ) {
+
+            statusClass =
+                "bg-yellow-100 text-yellow-700";
+
+        }
+
+
+        /* HUMAN REVIEW MESSAGE */
+
+        let statusMessage = "";
+
+        if (
+            normalizedStatus === "pending_review" ||
+            normalizedStatus === "awaiting_review"
+        ) {
+
+            statusMessage = `
+                <div class="mt-5 rounded-xl
+                            border border-yellow-200
+                            bg-yellow-50 p-4">
+
+                    <p class="font-semibold text-yellow-800">
+                        Human review required
+                    </p>
+
+                    <p class="text-sm text-yellow-700 mt-1">
+                        Your request requires manual review
+                        before the next action can be completed.
+                    </p>
+
+                </div>
+            `;
+
+        }
+
+        else if (
+            normalizedStatus === "completed"
+        ) {
+
+            statusMessage = `
+                <div class="mt-5 rounded-xl
+                            border border-green-200
+                            bg-green-50 p-4">
+
+                    <p class="font-semibold text-green-800">
+                        Request completed
+                    </p>
+
+                    <p class="text-sm text-green-700 mt-1">
+                        Your request has been successfully processed.
+                    </p>
+
+                </div>
+            `;
+
+        }
+
+
+        /* RESULT */
+
+        statusResult.className =
+            "mt-6 rounded-xl border bg-white p-6";
+
+
+        statusResult.innerHTML = `
+
+            <div class="flex flex-col md:flex-row
+                        md:items-center
+                        md:justify-between gap-4">
+
+                <div>
+
+                    <p class="text-xs text-slate-500">
+                        REQUEST ID
+                    </p>
+
+                    <p class="font-bold mt-1">
+                        ${
+                            request.request_id ||
+                            requestId
+                        }
+                    </p>
+
+                </div>
+
+
+                <span class="inline-flex
+                             px-3 py-1 rounded-full
+                             text-xs font-semibold
+                             ${statusClass}">
+
+                    ${status}
+
+                </span>
+
+            </div>
+
+
+            <div class="grid grid-cols-1
+                        md:grid-cols-3 gap-4 mt-6">
+
+
+                <div class="bg-slate-50 rounded-xl p-4">
+
+                    <p class="text-xs text-slate-500">
+                        Customer
+                    </p>
+
+                    <p class="font-semibold mt-1">
+                        ${
+                            request.customer_name ||
+                            "-"
+                        }
+                    </p>
+
+                </div>
+
+
+                <div class="bg-slate-50 rounded-xl p-4">
+
+                    <p class="text-xs text-slate-500">
+                        Priority
+                    </p>
+
+                    <p class="font-semibold mt-1">
+                        ${
+                            request.priority ||
+                            request.ai_analysis?.priority ||
+                            "-"
+                        }
+                    </p>
+
+                </div>
+
+
+                <div class="bg-slate-50 rounded-xl p-4">
+
+                    <p class="text-xs text-slate-500">
+                        Created
+                    </p>
+
+                    <p class="font-semibold mt-1">
+                        ${
+                            request.created_at ||
+                            "-"
+                        }
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            ${statusMessage}
+
+        `;
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Request status error:",
+            error
+        );
+
+
+        statusResult.className =
+            "mt-6 rounded-xl border border-red-200 bg-red-50 p-5";
+
+
+        statusResult.innerHTML = `
+
+            <p class="font-semibold text-red-700">
+                Unable to check request
+            </p>
+
+            <p class="text-sm text-red-600 mt-1">
+                Please check your connection and try again.
+            </p>
+
+        `;
+
+    }
+
+
+    finally {
+
+        statusButton.disabled = false;
+        statusButton.textContent = "Check Status";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

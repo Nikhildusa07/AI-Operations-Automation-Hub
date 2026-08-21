@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Operations Automation Hub</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: #f5f7fb;
+            color: #172033;
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e6e9ef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #172033;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #596579;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            max-width: 1180px;
+            margin: auto;
+            padding: 85px 30px 65px;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 70px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #eaf2ff;
+            color: #2563eb;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .badge span {
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 52px;
+            line-height: 1.08;
+            letter-spacing: -1.8px;
+            margin-bottom: 22px;
+        }
+
+        h1 strong {
+            color: #2563eb;
+        }
+
+        .hero-text {
+            color: #687386;
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 620px;
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 13px 22px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #172033;
+            border: 1px solid #d9dee8;
+        }
+
+        .btn-secondary:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        /* ================= HERO CARD ================= */
+
+        .hero-card {
+            background: white;
+            border: 1px solid #e3e7ef;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 18px 45px rgba(25, 40, 70, 0.08);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .status {
+            font-size: 11px;
+            color: #16a34a;
+            background: #ecfdf3;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .flow {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .flow-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px;
+            border: 1px solid #edf0f5;
+            border-radius: 10px;
+            background: #fafbfc;
+        }
+
+        .flow-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #eaf2ff;
+            color: #2563eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .flow-item strong {
+            font-size: 13px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .flow-item small {
+            color: #8993a5;
+            font-size: 11px;
+        }
+
+        .arrow {
+            text-align: center;
+            color: #b0b8c6;
+            font-size: 12px;
+        }
+
+        /* ================= ACCESS ================= */
+
+        .access {
+            background: #ffffff;
+            border-top: 1px solid #e7eaf0;
+            border-bottom: 1px solid #e7eaf0;
+            padding: 70px 30px;
+        }
+
+        .section {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 38px;
+        }
+
+        .section-heading h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .section-heading p {
+            color: #768195;
+            font-size: 14px;
+        }
+
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .access-card {
+            border: 1px solid #e2e6ed;
+            border-radius: 15px;
+            padding: 30px;
+            background: white;
+            transition: 0.2s ease;
+        }
+
+        .access-card:hover {
+            border-color: #b8cdfb;
+            box-shadow: 0 12px 30px rgba(30, 50, 90, 0.07);
+            transform: translateY(-2px);
+        }
+
+        .access-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 11px;
+            background: #eff5ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            margin-bottom: 18px;
+        }
+
+        .access-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .access-card p {
+            color: #737e91;
+            font-size: 13px;
+            line-height: 1.65;
+            margin-bottom: 22px;
+        }
+
+        /* ================= MODULES ================= */
+
+        .modules {
+            max-width: 1100px;
+            margin: auto;
+            padding: 75px 30px;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .module {
+            background: white;
+            border: 1px solid #e4e8ef;
+            border-radius: 12px;
+            padding: 19px;
+        }
+
+        .module-number {
+            color: #2563eb;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .module h4 {
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .module p {
+            color: #7a8496;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #111827;
+            color: #9ca3af;
+            padding: 30px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding-top: 55px;
+            }
+
+            h1 {
+                font-size: 42px;
+            }
+
+            .module-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            header {
+                padding: 0 20px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            h1 {
+                font-size: 35px;
+            }
+
+            .hero-text {
+                font-size: 15px;
+            }
+
+            .access-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <div class="logo">
+        <div class="logo-icon">AI</div>
+        <span>AI Operations Automation Hub</span>
+    </div>
+
+    <nav>
+        <a href="#overview">Overview</a>
+        <a href="#modules">Capabilities</a>
+        <a href="#access">Access</a>
+    </nav>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="overview">
+
+    <div>
+
+        <div class="badge">
+            <span></span>
+            AI-Powered Business Operations Platform
+        </div>
+
+        <h1>
+            Automate business operations
+            <strong>intelligently.</strong>
+        </h1>
+
+        <p class="hero-text">
+            AI Operations Automation Hub transforms business requests,
+            documents, emails, support issues, tasks and operational data
+            into intelligent, measurable and partially autonomous workflows.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="/customer/" class="btn btn-primary">
+                Enter User Portal →
+            </a>
+
+            <a href="/auth/login" class="btn btn-secondary">
+                Admin Portal
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- PROCESS CARD -->
+
+    <div class="hero-card">
+
+        <div class="card-header">
+
+            <div class="card-title">
+                Intelligent Operations Flow
+            </div>
+
+            <div class="status">
+                SYSTEM OPERATIONAL
+            </div>
+
+        </div>
+
+        <div class="flow">
+
+            <div class="flow-item">
+                <div class="flow-icon">01</div>
+                <div>
+                    <strong>Receive</strong>
+                    <small>Business request received</small>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <div class="flow-item">
+                <div class="flow-icon">02</div>
+                <div>
+                    <strong>Understand</strong>
+                    <small>AI analyzes the request</small>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <div class="flow-item">
+                <div class="flow-icon">03</div>
+                <div>
+                    <strong>Decide</strong>
+                    <small>Rules and AI determine action</small>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <div class="flow-item">
+                <div class="flow-icon">04</div>
+                <div>
+                    <strong>Automate</strong>
+                    <small>Workflow executes automatically</small>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <div class="flow-item">
+                <div class="flow-icon">05</div>
+                <div>
+                    <strong>Record & Monitor</strong>
+                    <small>Activity and results are tracked</small>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ACCESS ================= -->
+
+<section class="access" id="access">
+
+    <div class="section">
+
+        <div class="section-heading">
+
+            <h2>Choose your workspace</h2>
+
+            <p>
+                Access the platform based on your role.
+            </p>
+
+        </div>
+
+
+        <div class="access-grid">
+
+            <!-- USER -->
+
+            <div class="access-card">
+
+                <div class="access-icon">👤</div>
+
+                <h3>User Portal</h3>
+
+                <p>
+                    Submit operational requests, receive AI-powered
+                    processing and track your request from submission
+                    through completion.
+                </p>
+
+                <a href="/customer/" class="btn btn-primary">
+                    Continue as User →
+                </a>
+
+            </div>
+
+
+            <!-- ADMIN -->
+
+            <div class="access-card">
+
+                <div class="access-icon">⚙</div>
+
+                <h3>Admin Portal</h3>
+
+                <p>
+                    Monitor automation activity, manage requests,
+                    review AI decisions, approve sensitive actions,
+                    inspect audit logs and analyze operational metrics.
+                </p>
+
+                <a href="/auth/login" class="btn btn-secondary">
+                    Admin Login →
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MODULES ================= -->
+
+<section class="modules" id="modules">
+
+    <div class="section-heading">
+
+        <h2>Platform Capabilities</h2>
+
+        <p>
+            One centralized hub for intelligent business operations.
+        </p>
+
+    </div>
+
+
+    <div class="module-grid">
+
+        <div class="module">
+            <div class="module-number">01</div>
+            <h4>AI Assistant</h4>
+            <p>Understand business requests and trigger appropriate actions.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">02</div>
+            <h4>Document Intelligence</h4>
+            <p>Extract, classify and analyze business documents.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">03</div>
+            <h4>Email Intelligence</h4>
+            <p>Classify messages, determine priority and generate responses.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">04</div>
+            <h4>Workflow Automation</h4>
+            <p>Execute structured business workflows automatically.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">05</div>
+            <h4>AI Task Manager</h4>
+            <p>Convert natural-language instructions into structured tasks.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">06</div>
+            <h4>Meeting Intelligence</h4>
+            <p>Generate summaries, decisions and actionable follow-ups.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">07</div>
+            <h4>Data Processing</h4>
+            <p>Analyze, clean and generate insights from datasets.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">08</div>
+            <h4>Customer Support</h4>
+            <p>Classify customer requests and automate support workflows.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">09</div>
+            <h4>Knowledge Base</h4>
+            <p>Answer business questions using controlled knowledge.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">10</div>
+            <h4>Decision Engine</h4>
+            <p>Combine AI analysis with deterministic business rules.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">11</div>
+            <h4>Scheduler</h4>
+            <p>Schedule and monitor automated business operations.</p>
+        </div>
+
+        <div class="module">
+            <div class="module-number">12</div>
+            <h4>Monitoring & Audit</h4>
+            <p>Track executions, failures, approvals and system activity.</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div>
+        <strong>AI Operations Automation Hub</strong>
+    </div>
+
+    <div>
+        Intelligent • Automated • Measurable
+    </div>
+
+</footer>
+
+</body>
+</html>

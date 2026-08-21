@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI / Automation Activity | AI Business Automation</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen text-slate-900">
+
+    <!-- HEADER -->
+    <header class="bg-slate-950 text-white">
+
+        <div class="max-w-7xl mx-auto px-6 py-4
+                    flex flex-col md:flex-row
+                    md:items-center md:justify-between gap-4">
+
+            <!-- BRAND -->
+            <div>
+                <h1 class="text-xl font-bold">
+                    AI Business Automation
+                </h1>
+
+                <p class="text-xs text-slate-400 mt-1">
+                    AI / Automation Activity
+                </p>
+            </div>
+
+
+            <!-- ACTIONS -->
+            <div class="flex items-center gap-3 flex-wrap">
+
+                <span class="text-sm text-slate-300">
+                    Admin:
+                    <strong class="text-white">
+                        {{ admin_username | default("Admin") }}
+                    </strong>
+                </span>
+
+
+                <!-- Dashboard -->
+                <a
+                    href="/dashboard/"
+                    class="bg-slate-700
+                           hover:bg-slate-600
+                           px-4 py-2
+                           rounded-lg
+                           text-sm
+                           font-semibold
+                           transition"
+                >
+                    Dashboard
+                </a>
+
+
+                <!-- Refresh -->
+                <button
+                    type="button"
+                    onclick="window.location.reload()"
+                    class="bg-blue-600
+                           hover:bg-blue-700
+                           px-4 py-2
+                           rounded-lg
+                           text-sm
+                           font-semibold
+                           transition"
+                >
+                    Refresh
+                </button>
+
+
+                <!-- Logout -->
+                <a
+                    href="/auth/logout"
+                    class="bg-red-600
+                           hover:bg-red-700
+                           px-4 py-2
+                           rounded-lg
+                           text-sm
+                           font-semibold
+                           transition"
+                >
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+
+
+        <!-- PAGE HEADER -->
+        <div class="mb-8">
+
+            <div class="flex flex-col md:flex-row
+                        md:items-end
+                        md:justify-between gap-4">
+
+                <div>
+
+                    <h2 class="text-3xl font-bold text-slate-900">
+                        AI / Automation Activity
+                    </h2>
+
+                    <p class="text-slate-500 mt-2">
+                        Monitor AI processing, approvals,
+                        automation and workflow events.
+                    </p>
+
+                </div>
+
+
+                <div class="text-sm text-slate-500">
+                    Showing latest system activity
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVITY CARD -->
+        <div class="bg-white
+                    rounded-2xl
+                    shadow-sm
+                    border
+                    overflow-hidden">
+
+
+            <!-- CARD HEADER -->
+            <div class="px-6 py-5 border-b">
+
+                <h3 class="text-lg font-bold text-slate-900">
+                    Activity Log
+                </h3>
+
+                <p class="text-sm text-slate-500 mt-1">
+                    Latest AI and automation workflow events.
+                </p>
+
+            </div>
+
+
+            <!-- ACTIVITIES EXIST -->
+            {% if activities %}
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full text-sm">
+
+
+                    <!-- TABLE HEADER -->
+                    <thead class="bg-slate-50">
+
+                        <tr>
+
+                            <th class="text-left px-6 py-4
+                                       font-semibold
+                                       text-slate-700
+                                       whitespace-nowrap">
+                                Request ID
+                            </th>
+
+
+                            <th class="text-left px-6 py-4
+                                       font-semibold
+                                       text-slate-700">
+                                Action
+                            </th>
+
+
+                            <th class="text-left px-6 py-4
+                                       font-semibold
+                                       text-slate-700">
+                                Status
+                            </th>
+
+
+                            <th class="text-left px-6 py-4
+                                       font-semibold
+                                       text-slate-700">
+                                Message
+                            </th>
+
+
+                            <th class="text-left px-6 py-4
+                                       font-semibold
+                                       text-slate-700
+                                       whitespace-nowrap">
+                                Time
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- TABLE BODY -->
+                    <tbody>
+
+                    {% for activity in activities %}
+
+                        <tr class="border-t
+                                   hover:bg-slate-50
+                                   transition">
+
+
+                            <!-- REQUEST ID -->
+                            <td class="px-6 py-4
+                                       font-medium
+                                       text-slate-900
+                                       whitespace-nowrap">
+
+                                {{ activity.request_id | default("-") }}
+
+                            </td>
+
+
+                            <!-- ACTION -->
+                            <td class="px-6 py-4">
+
+                                <span class="inline-flex
+                                             px-3 py-1
+                                             rounded-full
+                                             bg-blue-50
+                                             text-blue-700
+                                             text-xs
+                                             font-semibold">
+
+                                    {{ activity.action | default("-") }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- STATUS -->
+                            <td class="px-6 py-4">
+
+                                {% set status =
+                                    activity.status | default("UNKNOWN")
+                                %}
+
+
+                                {% if status|string|upper == "SUCCESS" %}
+
+                                    <span class="inline-flex
+                                                 px-3 py-1
+                                                 rounded-full
+                                                 bg-green-50
+                                                 text-green-700
+                                                 text-xs
+                                                 font-semibold">
+
+                                        SUCCESS
+
+                                    </span>
+
+
+                                {% elif status|string|upper == "FAILED" %}
+
+                                    <span class="inline-flex
+                                                 px-3 py-1
+                                                 rounded-full
+                                                 bg-red-50
+                                                 text-red-700
+                                                 text-xs
+                                                 font-semibold">
+
+                                        FAILED
+
+                                    </span>
+
+
+                                {% elif status|string|upper == "PROCESSING" %}
+
+                                    <span class="inline-flex
+                                                 px-3 py-1
+                                                 rounded-full
+                                                 bg-blue-50
+                                                 text-blue-700
+                                                 text-xs
+                                                 font-semibold">
+
+                                        PROCESSING
+
+                                    </span>
+
+
+                                {% elif status|string|upper == "PENDING" %}
+
+                                    <span class="inline-flex
+                                                 px-3 py-1
+                                                 rounded-full
+                                                 bg-amber-50
+                                                 text-amber-700
+                                                 text-xs
+                                                 font-semibold">
+
+                                        PENDING
+
+                                    </span>
+
+
+                                {% else %}
+
+                                    <span class="inline-flex
+                                                 px-3 py-1
+                                                 rounded-full
+                                                 bg-slate-100
+                                                 text-slate-700
+                                                 text-xs
+                                                 font-semibold">
+
+                                        {{ status }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- MESSAGE -->
+                            <td class="px-6 py-4
+                                       text-slate-600
+                                       max-w-xl">
+
+                                <div class="break-words">
+
+                                    {{ activity.message | default("-") }}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- TIME -->
+                            <td class="px-6 py-4
+                                       text-slate-500
+                                       whitespace-nowrap">
+
+                                {{ activity.created_at | default("-") }}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- FOOTER -->
+            <div class="px-6 py-4
+                        border-t
+                        bg-slate-50
+                        flex flex-col sm:flex-row
+                        sm:items-center
+                        sm:justify-between
+                        gap-3">
+
+                <p class="text-xs text-slate-500">
+
+                    Total activity records:
+                    <strong class="text-slate-700">
+                        {{ activities | length }}
+                    </strong>
+
+                </p>
+
+
+                <button
+                    type="button"
+                    onclick="window.location.reload()"
+                    class="text-sm
+                           font-semibold
+                           text-blue-600
+                           hover:text-blue-800
+                           transition"
+                >
+                    ↻ Refresh Activity
+                </button>
+
+            </div>
+
+
+            {% else %}
+
+            <!-- EMPTY STATE -->
+            <div class="p-12 text-center">
+
+
+                <div class="mx-auto
+                            w-16 h-16
+                            rounded-2xl
+                            bg-slate-100
+                            flex items-center
+                            justify-center
+                            text-3xl">
+
+                    📋
+
+                </div>
+
+
+                <h3 class="text-lg
+                           font-semibold
+                           text-slate-900
+                           mt-5">
+
+                    No activity recorded
+
+                </h3>
+
+
+                <p class="text-sm
+                          text-slate-500
+                          mt-2
+                          max-w-md
+                          mx-auto">
+
+                    Activity will appear here when business
+                    requests are submitted and processed by
+                    the AI automation system.
+
+                </p>
+
+
+                <div class="mt-6">
+
+                    <a
+                        href="/dashboard/"
+                        class="inline-flex
+                               items-center
+                               justify-center
+                               bg-slate-950
+                               hover:bg-slate-800
+                               text-white
+                               px-5 py-3
+                               rounded-xl
+                               text-sm
+                               font-semibold
+                               transition"
+                    >
+                        ← Back to Dashboard
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="max-w-7xl mx-auto px-6 pb-8">
+
+        <div class="text-center text-xs text-slate-400">
+
+            AI Business Automation Platform
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | AI Business Automation</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+                         BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .sidebar-item {
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .sidebar-item.active {
+            background: rgba(255,255,255,0.10);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-900">
+
+<div class="min-h-screen flex">
+
+    <!-- ================================================= -->
+    <!-- SIDEBAR -->
+    <!-- ================================================= -->
+
+    <aside class="w-64 bg-slate-950 text-white fixed inset-y-0 left-0 flex flex-col">
+
+        <!-- Logo -->
+        <div class="px-6 py-6 border-b border-white/10">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-10 h-10 rounded-xl bg-white text-slate-950
+                            flex items-center justify-center font-bold">
+                    AI
+                </div>
+
+                <div>
+                    <h1 class="font-bold text-sm">
+                        AI Business
+                    </h1>
+
+                    <p class="text-xs text-slate-400">
+                        Automation Hub
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+
+            <a href="/dashboard/"
+               class="sidebar-item active flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm font-medium">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+            <a href="/api/requests/"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>▤</span>
+                Requests
+            </a>
+
+            <a href="/documents/"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>▣</span>
+                Documents
+            </a>
+
+            <a href="/api/emails/health"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>✉</span>
+                Email Intelligence
+            </a>
+
+            <a href="/api/tasks/"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>✓</span>
+                Task Manager
+            </a>
+
+            <a href="/api/meetings/health"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>◷</span>
+                Meetings
+            </a>
+
+            <a href="/api/data/health"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>▥</span>
+                Data Processing
+            </a>
+
+            <a href="/api/support/health"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>◉</span>
+                Customer Support
+            </a>
+
+            <a href="/api/knowledge/"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>?</span>
+                Knowledge Base
+            </a>
+
+            <a href="/api/decision/health"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>◇</span>
+                Decision Engine
+            </a>
+
+            <a href="/api/scheduler/health"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>◫</span>
+                Scheduler
+            </a>
+
+            <a href="/api/activity-logs/"
+               class="sidebar-item flex items-center gap-3
+                      rounded-xl px-4 py-3 text-sm text-slate-300">
+                <span>≡</span>
+                Monitoring & Audit
+            </a>
+
+        </nav>
+
+
+        <!-- Admin -->
+        <div class="p-4 border-t border-white/10">
+
+            <div class="flex items-center gap-3 px-3 py-3 mb-3">
+
+                <div class="w-9 h-9 rounded-full bg-slate-700
+                            flex items-center justify-center text-sm font-bold">
+                    {{ admin_username[:1]|upper }}
+                </div>
+
+                <div class="min-w-0">
+                    <p class="text-sm font-semibold truncate">
+                        {{ admin_username }}
+                    </p>
+
+                    <p class="text-xs text-slate-400">
+                        Administrator
+                    </p>
+                </div>
+
+            </div>
+
+            <a href="/auth/logout"
+               class="flex items-center justify-center gap-2
+                      w-full rounded-xl border border-white/10
+                      px-4 py-2.5 text-sm text-slate-300
+                      hover:bg-white/10 transition">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ================================================= -->
+
+    <main class="ml-64 flex-1 min-h-screen">
+
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200
+                       px-8 py-5 flex items-center justify-between">
+
+            <div>
+                <p class="text-xs uppercase tracking-wider
+                          text-slate-400 font-semibold">
+                    Administration
+                </p>
+
+                <h2 class="text-2xl font-bold mt-1">
+                    Operations Dashboard
+                </h2>
+
+                <p class="text-sm text-slate-500 mt-1">
+                    Monitor and manage AI-powered business operations.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+
+                <div class="hidden md:flex items-center gap-2
+                            px-3 py-2 rounded-xl bg-emerald-50
+                            text-emerald-700 text-xs font-semibold">
+
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    System Operational
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Dashboard -->
+        <section class="p-8">
+
+            <!-- ================================================= -->
+            <!-- KPI CARDS -->
+            <!-- ================================================= -->
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-5">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+                            <p class="text-sm text-slate-500">
+                                Total Requests
+                            </p>
+
+                            <h3 id="totalRequests"
+                                class="text-3xl font-bold mt-2">
+                                —
+                            </h3>
+                        </div>
+
+                        <div class="w-11 h-11 rounded-xl bg-slate-100
+                                    flex items-center justify-center">
+                            ▤
+                        </div>
+
+                    </div>
+
+                    <p class="text-xs text-slate-400 mt-4">
+                        Business requests received
+                    </p>
+
+                </div>
+
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-5">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+                            <p class="text-sm text-slate-500">
+                                Pending
+                            </p>
+
+                            <h3 id="pendingRequests"
+                                class="text-3xl font-bold mt-2">
+                                —
+                            </h3>
+                        </div>
+
+                        <div class="w-11 h-11 rounded-xl bg-amber-50
+                                    text-amber-600
+                                    flex items-center justify-center">
+                            ◷
+                        </div>
+
+                    </div>
+
+                    <p class="text-xs text-slate-400 mt-4">
+                        Awaiting processing
+                    </p>
+
+                </div>
+
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-5">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+                            <p class="text-sm text-slate-500">
+                                Completed
+                            </p>
+
+                            <h3 id="completedRequests"
+                                class="text-3xl font-bold mt-2">
+                                —
+                            </h3>
+                        </div>
+
+                        <div class="w-11 h-11 rounded-xl bg-emerald-50
+                                    text-emerald-600
+                                    flex items-center justify-center">
+                            ✓
+                        </div>
+
+                    </div>
+
+                    <p class="text-xs text-slate-400 mt-4">
+                        Successfully processed
+                    </p>
+
+                </div>
+
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-5">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+                            <p class="text-sm text-slate-500">
+                                Failed
+                            </p>
+
+                            <h3 id="failedRequests"
+                                class="text-3xl font-bold mt-2">
+                                —
+                            </h3>
+                        </div>
+
+                        <div class="w-11 h-11 rounded-xl bg-red-50
+                                    text-red-600
+                                    flex items-center justify-center">
+                            !
+                        </div>
+
+                    </div>
+
+                    <p class="text-xs text-slate-400 mt-4">
+                        Require attention
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- QUICK ACTIONS -->
+            <!-- ================================================= -->
+
+            <div class="mb-8">
+
+                <div class="flex items-center justify-between mb-4">
+
+                    <div>
+                        <h3 class="text-lg font-bold">
+                            Automation Modules
+                        </h3>
+
+                        <p class="text-sm text-slate-500">
+                            Access the platform's AI-powered capabilities.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+
+                    <a href="/documents/"
+                       class="bg-white border border-slate-200 rounded-2xl p-5
+                              hover:border-slate-400 hover:shadow-sm transition">
+
+                        <div class="text-2xl mb-4">▣</div>
+
+                        <h4 class="font-semibold">
+                            Document Intelligence
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-2">
+                            Extract and analyze business documents.
+                        </p>
+
+                    </a>
+
+
+                    <a href="/api/emails/health"
+                       class="bg-white border border-slate-200 rounded-2xl p-5
+                              hover:border-slate-400 hover:shadow-sm transition">
+
+                        <div class="text-2xl mb-4">✉</div>
+
+                        <h4 class="font-semibold">
+                            Email Intelligence
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-2">
+                            Classify messages and generate responses.
+                        </p>
+
+                    </a>
+
+
+                    <a href="/api/tasks/"
+                       class="bg-white border border-slate-200 rounded-2xl p-5
+                              hover:border-slate-400 hover:shadow-sm transition">
+
+                        <div class="text-2xl mb-4">✓</div>
+
+                        <h4 class="font-semibold">
+                            AI Task Manager
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-2">
+                            Convert requests into structured tasks.
+                        </p>
+
+                    </a>
+
+
+                    <a href="/api/meetings/health"
+                       class="bg-white border border-slate-200 rounded-2xl p-5
+                              hover:border-slate-400 hover:shadow-sm transition">
+
+                        <div class="text-2xl mb-4">◷</div>
+
+                        <h4 class="font-semibold">
+                            Meeting Intelligence
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-2">
+                            Generate summaries and follow-ups.
+                        </p>
+
+                    </a>
+
+
+                    <a href="/api/data/health"
+                       class="bg-white border border-slate-200 rounded-2xl p-5
+                              hover:border-slate-400 hover:shadow-sm transition">
+
+                        <div class="text-2xl mb-4">▥</div>
+
+                        <h4 class="font-semibold">
+                            Data Processing
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-2">
+                            Analyze, clean and generate insights.
+                        </p>
+
+                    </a>
+
+
+                    <a href="/api/support/health"
+                       class="bg-white border border-slate-200 rounded-2xl p-5
+                              hover:border-slate-400 hover:shadow-sm transition">
+
+                        <div class="text-2xl mb-4">◉</div>
+
+                        <h4 class="font-semibold">
+                            Customer Support
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-2">
+                            Automate support classification and responses.
+                        </p>
+
+                    </a>
+
+
+                    <a href="/api/decision/health"
+                       class="bg-white border border-slate-200 rounded-2xl p-5
+                              hover:border-slate-400 hover:shadow-sm transition">
+
+                        <div class="text-2xl mb-4">◇</div>
+
+                        <h4 class="font-semibold">
+                            Decision Engine
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-2">
+                            Combine AI analysis with business rules.
+                        </p>
+
+                    </a>
+
+
+                    <a href="/api/scheduler/health"
+                       class="bg-white border border-slate-200 rounded-2xl p-5
+                              hover:border-slate-400 hover:shadow-sm transition">
+
+                        <div class="text-2xl mb-4">◫</div>
+
+                        <h4 class="font-semibold">
+                            Scheduler
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-2">
+                            Schedule automated business operations.
+                        </p>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- SYSTEM ACTIVITY -->
+            <!-- ================================================= -->
+
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+                <div class="xl:col-span-2 bg-white rounded-2xl
+                            border border-slate-200">
+
+                    <div class="px-6 py-5 border-b border-slate-200
+                                flex items-center justify-between">
+
+                        <div>
+                            <h3 class="font-bold">
+                                Recent Activity
+                            </h3>
+
+                            <p class="text-xs text-slate-500 mt-1">
+                                Latest platform operations
+                            </p>
+                        </div>
+
+                        <a href="/api/activity-logs/"
+                           class="text-xs font-semibold text-slate-700
+                                  hover:text-black">
+                            View All
+                        </a>
+
+                    </div>
+
+                    <div id="activityList"
+                         class="divide-y divide-slate-100">
+
+                        <div class="px-6 py-8 text-center text-sm text-slate-400">
+                            Loading activity...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- System Status -->
+                <div class="bg-white rounded-2xl
+                            border border-slate-200">
+
+                    <div class="px-6 py-5 border-b border-slate-200">
+
+                        <h3 class="font-bold">
+                            System Status
+                        </h3>
+
+                        <p class="text-xs text-slate-500 mt-1">
+                            Core services
+                        </p>
+
+                    </div>
+
+                    <div class="p-6 space-y-4">
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-sm">
+                                AI Engine
+                            </span>
+
+                            <span class="text-xs font-semibold
+                                         text-emerald-600">
+                                ● Operational
+                            </span>
+
+                        </div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-sm">
+                                Database
+                            </span>
+
+                            <span class="text-xs font-semibold
+                                         text-emerald-600">
+                                ● Operational
+                            </span>
+
+                        </div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-sm">
+                                Automation
+                            </span>
+
+                            <span class="text-xs font-semibold
+                                         text-emerald-600">
+                                ● Operational
+                            </span>
+
+                        </div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-sm">
+                                Scheduler
+                            </span>
+
+                            <span class="text-xs font-semibold
+                                         text-emerald-600">
+                                ● Operational
+                            </span>
+
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-100">
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-xs text-slate-500">
+                                    Platform
+                                </span>
+
+                                <span class="text-xs font-semibold">
+                                    AI Operations Hub
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+async function loadDashboardData() {
+
+    try {
+
+        const response = await fetch("/api/activity-logs/");
+
+        if (!response.ok) {
+            throw new Error("Activity API unavailable");
+        }
+
+        const data = await response.json();
+
+        const logs = data.logs || [];
+
+        document.getElementById("totalRequests").textContent =
+            data.count ?? 0;
+
+        const pending = logs.filter(
+            log => String(log.status).toUpperCase() === "PENDING"
+        ).length;
+
+        const completed = logs.filter(
+            log => ["SUCCESS", "COMPLETED", "SENT"]
+                .includes(String(log.status).toUpperCase())
+        ).length;
+
+        const failed = logs.filter(
+            log => ["FAILED", "ERROR"]
+                .includes(String(log.status).toUpperCase())
+        ).length;
+
+        document.getElementById("pendingRequests").textContent = pending;
+        document.getElementById("completedRequests").textContent = completed;
+        document.getElementById("failedRequests").textContent = failed;
+
+        const activityList =
+            document.getElementById("activityList");
+
+        if (!logs.length) {
+
+            activityList.innerHTML = `
+                <div class="px-6 py-8 text-center text-sm text-slate-400">
+                    No activity recorded yet.
+                </div>
+            `;
+
+            return;
+        }
+
+        activityList.innerHTML = logs
+            .slice(0, 6)
+            .map(log => {
+
+                const status =
+                    String(log.status || "UNKNOWN").toUpperCase();
+
+                let statusClass =
+                    "bg-slate-100 text-slate-600";
+
+                if (
+                    ["SUCCESS", "COMPLETED", "SENT"]
+                    .includes(status)
+                ) {
+                    statusClass =
+                        "bg-emerald-50 text-emerald-700";
+                }
+
+                if (
+                    ["FAILED", "ERROR"]
+                    .includes(status)
+                ) {
+                    statusClass =
+                        "bg-red-50 text-red-700";
+                }
+
+                if (status === "PENDING") {
+                    statusClass =
+                        "bg-amber-50 text-amber-700";
+                }
+
+                return `
+                    <div class="px-6 py-4 flex items-center
+                                justify-between gap-4">
+
+                        <div class="min-w-0">
+
+                            <p class="text-sm font-medium truncate">
+                                ${escapeHtml(log.action || "System action")}
+                            </p>
+
+                            <p class="text-xs text-slate-400 mt-1 truncate">
+                                ${escapeHtml(log.message || "")}
+                            </p>
+
+                        </div>
+
+                        <span class="shrink-0 px-2.5 py-1 rounded-full
+                                     text-[11px] font-semibold ${statusClass}">
+                            ${escapeHtml(status)}
+                        </span>
+
+                    </div>
+                `;
+            })
+            .join("");
+
+    } catch (error) {
+
+        document.getElementById("activityList").innerHTML = `
+            <div class="px-6 py-8 text-center text-sm text-slate-400">
+                Activity data is currently unavailable.
+            </div>
+        `;
+
+    }
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+loadDashboardData();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Operations Automation Hub | Dashboard</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+                BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .sidebar {
+            width: 250px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+        }
+
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #1e293b;
+        }
+
+        .nav-link.active {
+            background: #1d4ed8;
+            color: #ffffff;
+        }
+
+        .metric-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-processing {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-default {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .priority-critical {
+            background: #7f1d1d;
+            color: #ffffff;
+        }
+
+        .priority-default {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .mobile-header {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 76px;
+            }
+
+            .sidebar-text {
+                display: none !important;
+            }
+
+            .sidebar-brand {
+                justify-content: center;
+            }
+
+            .main-content {
+                margin-left: 76px;
+            }
+
+            .nav-link {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar fixed left-0 top-0 bottom-0 z-50 bg-slate-950 text-white">
+
+    <div class="sidebar-brand flex h-20 items-center border-b border-slate-800 px-5">
+
+        <div>
+            <div class="flex items-center gap-3">
+
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-sm font-extrabold">
+                    AI
+                </div>
+
+                <div class="sidebar-text">
+                    <div class="text-sm font-bold leading-tight">
+                        AI Operations
+                    </div>
+
+                    <div class="mt-1 text-xs text-slate-400">
+                        Automation Hub
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <nav class="px-3 py-5">
+
+        <div class="sidebar-text mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            Workspace
+        </div>
+
+
+        <a
+            href="{{ dashboard_url | default('/dashboard/', true) }}"
+            class="nav-link active mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold"
+        >
+            <span class="text-lg">▦</span>
+            <span class="sidebar-text">Dashboard</span>
+        </a>
+
+
+        <a
+            href="{{ business_request_url | default('/business-request', true) }}" 
+            class="nav-link mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-300"
+        >
+            <span class="text-lg">＋</span>
+            <span class="sidebar-text">Business Request</span>
+        </a>
+
+
+        <a
+            href="{{ requests_url | default('/requests/', true) }}"
+            class="nav-link mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-300"
+        >
+            <span class="text-lg">✓</span>
+            <span class="sidebar-text">Requests</span>
+        </a>
+
+
+        <a
+            href="{{ documents_url | default('/documents', true) }}"
+            class="nav-link mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-300"
+        >
+            <span class="text-lg">▤</span>
+            <span class="sidebar-text">Documents</span>
+        </a>
+
+
+        <div class="sidebar-text mb-3 mt-7 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            System
+        </div>
+
+
+        <a
+            href="#analytics"
+            class="nav-link mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-300"
+        >
+            <span class="text-lg">◔</span>
+            <span class="sidebar-text">Analytics</span>
+        </a>
+
+
+        <a
+            href="#activity"
+            class="nav-link mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-300"
+        >
+            <span class="text-lg">⚡</span>
+            <span class="sidebar-text">Activity</span>
+        </a>
+
+    </nav>
+
+
+    <div class="absolute bottom-0 left-0 right-0 border-t border-slate-800 p-4">
+
+        <div class="mb-3 flex items-center gap-3">
+
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-800 text-xs font-bold">
+                {{ admin_username | default("A", true) | string | first | upper }}
+            </div>
+
+            <div class="sidebar-text min-w-0">
+                <p class="truncate text-xs font-semibold text-white">
+                    {{ admin_username | default("Admin", true) }}
+                </p>
+
+                <p class="text-[10px] text-slate-500">
+                    Administrator
+                </p>
+            </div>
+
+        </div>
+
+
+        <a
+            href="{{ logout_url | default('/auth/logout', true) }}"
+            class="flex items-center justify-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-red-500 hover:bg-red-500/10 hover:text-red-400"
+        >
+            <span>↪</span>
+            <span class="sidebar-text">Logout</span>
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MOBILE HEADER
+========================================================= -->
+
+<header class="mobile-header sticky top-0 z-40 items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
+
+    <div class="flex items-center gap-3">
+
+        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-950 text-xs font-bold text-white">
+            AI
+        </div>
+
+        <div>
+            <p class="text-sm font-bold text-slate-900">
+                AI Operations Hub
+            </p>
+
+            <p class="text-[10px] text-slate-500">
+                Admin Dashboard
+            </p>
+        </div>
+
+    </div>
+
+
+    <a
+        href="{{ logout_url | default('/auth/logout', true) }}"
+        class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700"
+    >
+        Logout
+    </a>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main class="main-content min-h-screen">
+
+
+    <!-- TOP BAR -->
+
+    <header class="sticky top-0 z-30 hidden border-b border-slate-200 bg-white/95 backdrop-blur md:block">
+
+        <div class="flex h-20 items-center justify-between px-8">
+
+            <div>
+
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                    Administration
+                </p>
+
+                <h1 class="mt-1 text-lg font-bold text-slate-900">
+                    Operations Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="flex items-center gap-4">
+
+                <div class="text-right">
+
+                    <p class="text-xs text-slate-400">
+                        Signed in as
+                    </p>
+
+                    <p class="text-sm font-semibold text-slate-700">
+                        {{ admin_username | default("Admin", true) }}
+                    </p>
+
+                </div>
+
+
+                <div class="h-9 w-px bg-slate-200"></div>
+
+
+                <a
+                    href="{{ home_url | default('/', true) }}"
+                    class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                    Home
+                </a>
+
+
+                <a
+                    href="{{ logout_url | default('/auth/logout', true) }}"
+                    class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- CONTENT -->
+
+    <div class="mx-auto max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+
+
+        <!-- PAGE HEADER -->
+
+        <section class="mb-8">
+
+            <div>
+
+                <p class="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-600">
+                    Business Operations
+                </p>
+
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                    Operations Overview
+                </h2>
+
+                <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-500 sm:text-base">
+                    Monitor business requests, AI processing, human reviews,
+                    automation execution, and system activity from one place.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% if success_message %}
+
+        <div
+            class="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-800"
+        >
+            <span class="font-bold">✓</span>
+
+            <div>
+                <p class="font-semibold">
+                    Action completed
+                </p>
+
+                <p class="mt-1">
+                    {{ success_message }}
+                </p>
+            </div>
+        </div>
+
+        {% endif %}
+
+
+        {% if error_message %}
+
+        <div
+            class="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-800"
+        >
+            <span class="font-bold">!</span>
+
+            <div>
+                <p class="font-semibold">
+                    Action failed
+                </p>
+
+                <p class="mt-1">
+                    {{ error_message }}
+                </p>
+            </div>
+        </div>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             KPI CARDS
+        ====================================================== -->
+
+        <section class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+
+            <!-- TOTAL -->
+
+            <div class="metric-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            Total Requests
+                        </p>
+
+                        <p class="mt-3 text-3xl font-bold text-slate-900">
+                            {{ metrics.total_requests | default(0, true) }}
+                        </p>
+
+                    </div>
+
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-xl text-blue-600">
+                        ≡
+                    </div>
+
+                </div>
+
+                <p class="mt-4 text-xs text-slate-500">
+                    All requests received by the platform
+                </p>
+
+            </div>
+
+
+            <!-- PENDING -->
+
+            <div class="metric-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            Pending
+                        </p>
+
+                        <p class="mt-3 text-3xl font-bold text-amber-600">
+                            {{ metrics.pending_requests | default(0, true) }}
+                        </p>
+
+                    </div>
+
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-xl text-amber-600">
+                        ◷
+                    </div>
+
+                </div>
+
+                <p class="mt-4 text-xs text-slate-500">
+                    Requests waiting for processing
+                </p>
+
+            </div>
+
+
+            <!-- COMPLETED -->
+
+            <div class="metric-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            Completed
+                        </p>
+
+                        <p class="mt-3 text-3xl font-bold text-emerald-600">
+                            {{ metrics.completed_requests | default(0, true) }}
+                        </p>
+
+                    </div>
+
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-xl text-emerald-600">
+                        ✓
+                    </div>
+
+                </div>
+
+                <p class="mt-4 text-xs text-slate-500">
+                    Successfully completed requests
+                </p>
+
+            </div>
+
+
+            <!-- FAILED -->
+
+            <div class="metric-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            Failed
+                        </p>
+
+                        <p class="mt-3 text-3xl font-bold text-red-600">
+                            {{ metrics.failed_requests | default(0, true) }}
+                        </p>
+
+                    </div>
+
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-xl text-red-600">
+                        !
+                    </div>
+
+                </div>
+
+                <p class="mt-4 text-xs text-slate-500">
+                    Requests requiring attention
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SECONDARY METRICS
+        ====================================================== -->
+
+        <section class="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-7">
+
+
+            <div class="rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    Processing
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-blue-600">
+                    {{ metrics.processing_requests | default(0, true) }}
+                </p>
+            </div>
+
+
+            <div class="rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    Reviews
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-violet-600">
+                    {{ metrics.pending_reviews | default(0, true) }}
+                </p>
+            </div>
+
+
+            <div class="rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    High Priority
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-red-600">
+                    {{ metrics.high_priority | default(0, true) }}
+                </p>
+            </div>
+
+
+            <div class="rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    Successful AI
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-emerald-600">
+                    {{ metrics.successful_automations | default(0, true) }}
+                </p>
+            </div>
+
+
+            <div class="rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    Failed AI
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-red-600">
+                    {{ metrics.failed_automations | default(0, true) }}
+                </p>
+            </div>
+
+
+            <div class="rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    Scheduled
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-blue-600">
+                    {{ metrics.scheduled_count | default(0, true) }}
+                </p>
+            </div>
+
+
+            <div class="rounded-xl border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    Running
+                </p>
+
+                <p class="mt-2 text-2xl font-bold text-violet-600">
+                    {{ metrics.running_count | default(0, true) }}
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             CHARTS
+        ====================================================== -->
+
+        <section id="analytics" class="mb-8">
+
+            <div class="mb-5">
+
+                <h3 class="text-xl font-bold text-slate-900">
+                    Analytics
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Visual overview of request and automation performance.
+                </p>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
+
+
+                <!-- REQUEST ACTIVITY -->
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <div class="mb-5">
+
+                        <h4 class="font-bold text-slate-900">
+                            Request Activity
+                        </h4>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Requests created during the last seven days.
+                        </p>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="requestActivityChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- REQUEST STATUS -->
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <div class="mb-5">
+
+                        <h4 class="font-bold text-slate-900">
+                            Request Status
+                        </h4>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Current distribution of request states.
+                        </p>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- PRIORITY -->
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <div class="mb-5">
+
+                        <h4 class="font-bold text-slate-900">
+                            Request Priority
+                        </h4>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Distribution across priority levels.
+                        </p>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="priorityChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- AUTOMATION -->
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                    <div class="mb-5">
+
+                        <h4 class="font-bold text-slate-900">
+                            Automation Results
+                        </h4>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Successful, failed and review-based automation activity.
+                        </p>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="automationChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- SCHEDULER -->
+
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm xl:col-span-2">
+
+                    <div class="mb-5">
+
+                        <h4 class="font-bold text-slate-900">
+                            Scheduler Status
+                        </h4>
+
+                        <p class="mt-1 text-xs text-slate-500">
+                            Scheduled automation execution status.
+                        </p>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="schedulerChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PENDING HUMAN REVIEW
+        ====================================================== -->
+
+        <section id="reviews" class="mb-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+            <div class="flex flex-col justify-between gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:px-6">
+
+                <div>
+
+                    <h3 class="font-bold text-slate-900">
+                        Pending Human Review
+                    </h3>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Review requests that require administrator approval.
+                    </p>
+
+                </div>
+
+
+                <span class="inline-flex w-fit items-center rounded-full bg-violet-100 px-3 py-1.5 text-xs font-bold text-violet-700">
+                    {{ metrics.pending_reviews | default(0, true) }} Pending
+                </span>
+
+            </div>
+
+
+            {% if pending_review_items %}
+
+            <div class="table-wrapper">
+
+                <table class="min-w-full text-left">
+
+                    <thead class="border-b border-slate-200 bg-slate-50">
+
+                        <tr>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Request
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Customer
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Priority
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Status
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Created
+                            </th>
+
+                            <th class="px-5 py-3 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody class="divide-y divide-slate-100">
+
+                    {% for review, req in pending_review_items %}
+
+                        <tr class="transition hover:bg-slate-50">
+
+
+                            <td class="px-5 py-4">
+
+                                <div class="font-semibold text-slate-900">
+                                    {{ req.request_id | default("-", true) }}
+                                </div>
+
+                                {% if req.input_text %}
+
+                                <div class="mt-1 max-w-xs truncate text-xs text-slate-500">
+                                    {{ req.input_text }}
+                                </div>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="px-5 py-4">
+
+                                <div class="font-medium text-slate-700">
+                                    {{ req.customer_name | default("-", true) }}
+                                </div>
+
+                                {% if req.customer_email %}
+
+                                <div class="mt-1 text-xs text-slate-400">
+                                    {{ req.customer_email }}
+                                </div>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="px-5 py-4">
+
+                                {% set priority = req.priority | default("", true) | string | upper %}
+
+                                {% if priority == "CRITICAL" %}
+
+                                <span class="status-badge priority-critical">
+                                    CRITICAL
+                                </span>
+
+                                {% elif priority == "HIGH" %}
+
+                                <span class="status-badge priority-high">
+                                    HIGH
+                                </span>
+
+                                {% else %}
+
+                                <span class="status-badge priority-default">
+                                    {{ req.priority | default("NORMAL", true) }}
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="px-5 py-4">
+
+                                {% set status = req.status | default("pending_review", true) | string | lower %}
+
+                                {% if "fail" in status or "error" in status %}
+
+                                <span class="status-badge status-failed">
+                                    {{ req.status | default("FAILED", true) }}
+                                </span>
+
+                                {% elif "process" in status or "progress" in status %}
+
+                                <span class="status-badge status-processing">
+                                    {{ req.status | default("PROCESSING", true) }}
+                                </span>
+
+                                {% elif "complete" in status or "approved" in status %}
+
+                                <span class="status-badge status-success">
+                                    {{ req.status | default("COMPLETED", true) }}
+                                </span>
+
+                                {% else %}
+
+                                <span class="status-badge status-pending">
+                                    {{ req.status | default("PENDING REVIEW", true) }}
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-500">
+                                {{ req.created_at | default("-", true) }}
+                            </td>
+
+
+                            <td class="px-5 py-4">
+
+                                <div class="flex justify-end gap-2">
+
+
+                                    <form
+                                        method="post"
+                                        action="/dashboard/review/{{ req.request_id }}/approve"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            onclick="return confirm('Approve this request?');"
+                                            class="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                                        >
+                                            Approve
+                                        </button>
+
+                                    </form>
+
+
+                                    <form
+                                        method="post"
+                                        action="/dashboard/review/{{ req.request_id }}/reject"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            onclick="return confirm('Reject this request?');"
+                                            class="rounded-lg bg-red-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                                        >
+                                            Reject
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+            <div class="px-6 py-14 text-center">
+
+                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl text-emerald-600">
+                    ✓
+                </div>
+
+                <h4 class="mt-4 font-bold text-slate-900">
+                    No pending reviews
+                </h4>
+
+                <p class="mx-auto mt-2 max-w-md text-sm text-slate-500">
+                    There are currently no business requests waiting for administrator approval.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =====================================================
+             RECENT REQUESTS
+        ====================================================== -->
+
+        <section id="requests" class="mb-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+            <div class="flex items-center justify-between border-b border-slate-200 px-5 py-5 sm:px-6">
+
+                <div>
+
+                    <h3 class="font-bold text-slate-900">
+                        Recent Requests
+                    </h3>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                        Latest business requests received by the system.
+                    </p>
+
+                </div>
+
+                <span class="hidden rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 sm:block">
+                    Latest 10
+                </span>
+
+            </div>
+
+
+            {% if recent_requests %}
+
+            <div class="table-wrapper">
+
+                <table class="min-w-full text-left">
+
+                    <thead class="border-b border-slate-200 bg-slate-50">
+
+                        <tr>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Request ID
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Customer
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Email
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Priority
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Status
+                            </th>
+
+                            <th class="px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-500">
+                                Created
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody class="divide-y divide-slate-100">
+
+                    {% for req in recent_requests %}
+
+                        <tr class="transition hover:bg-slate-50">
+
+
+                            <td class="whitespace-nowrap px-5 py-4">
+
+                                <span class="font-semibold text-slate-900">
+                                    {{ req.request_id | default("-", true) }}
+                                </span>
+
+                            </td>
+
+
+                            <td class="px-5 py-4 text-sm text-slate-700">
+                                {{ req.customer_name | default("-", true) }}
+                            </td>
+
+
+                            <td class="px-5 py-4 text-sm text-slate-500">
+                                {{ req.customer_email | default("-", true) }}
+                            </td>
+
+
+                            <td class="px-5 py-4">
+
+                                {% set priority = req.priority | default("", true) | string | upper %}
+
+                                {% if priority == "CRITICAL" %}
+
+                                <span class="status-badge priority-critical">
+                                    CRITICAL
+                                </span>
+
+                                {% elif priority == "HIGH" %}
+
+                                <span class="status-badge priority-high">
+                                    HIGH
+                                </span>
+
+                                {% else %}
+
+                                <span class="status-badge priority-default">
+                                    {{ req.priority | default("NORMAL", true) }}
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="px-5 py-4">
+
+                                {% set status = req.status | default("UNKNOWN", true) | string | lower %}
+
+                                {% if "fail" in status or "error" in status %}
+
+                                <span class="status-badge status-failed">
+                                    {{ req.status | default("FAILED", true) }}
+                                </span>
+
+                                {% elif "complete" in status or "approved" in status %}
+
+                                <span class="status-badge status-success">
+                                    {{ req.status | default("COMPLETED", true) }}
+                                </span>
+
+                                {% elif "process" in status or "progress" in status %}
+
+                                <span class="status-badge status-processing">
+                                    {{ req.status | default("PROCESSING", true) }}
+                                </span>
+
+                                {% elif "pending" in status or "review" in status %}
+
+                                <span class="status-badge status-pending">
+                                    {{ req.status | default("PENDING", true) }}
+                                </span>
+
+                                {% else %}
+
+                                <span class="status-badge status-default">
+                                    {{ req.status | default("UNKNOWN", true) }}
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-500">
+                                {{ req.created_at | default("-", true) }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+            <div class="px-6 py-14 text-center">
+
+                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-400">
+                    ≡
+                </div>
+
+                <h4 class="mt-4 font-semibold text-slate-900">
+                    No requests found
+                </h4>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Business requests will appear here after submission.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =====================================================
+             ACTIVITY
+        ====================================================== -->
+
+        <section id="activity" class="mb-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+            <div class="border-b border-slate-200 px-5 py-5 sm:px-6">
+
+                <h3 class="font-bold text-slate-900">
+                    Recent System Activity
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Latest automation and workflow activity recorded by the system.
+                </p>
+
+            </div>
+
+
+            {% if recent_activity %}
+
+            <div class="divide-y divide-slate-100">
+
+            {% for activity in recent_activity %}
+
+                <div class="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+
+                    <div class="flex min-w-0 items-start gap-3">
+
+                        <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-sm text-blue-600">
+                            ⚡
+                        </div>
+
+                        <div class="min-w-0">
+
+                            <p class="truncate text-sm font-semibold text-slate-800">
+                                {{ activity.action | default("System Activity", true) }}
+                            </p>
+
+                            {% if activity.message %}
+
+                            <p class="mt-1 max-w-2xl truncate text-xs text-slate-500">
+                                {{ activity.message }}
+                            </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex shrink-0 items-center gap-3">
+
+                        {% set activity_status = activity.status | default("UNKNOWN", true) | string | lower %}
+
+                        {% if activity_status == "success" or "complete" in activity_status %}
+
+                        <span class="status-badge status-success">
+                            {{ activity.status | default("SUCCESS", true) }}
+                        </span>
+
+                        {% elif activity_status == "failed" or "error" in activity_status %}
+
+                        <span class="status-badge status-failed">
+                            {{ activity.status | default("FAILED", true) }}
+                        </span>
+
+                        {% elif "pending" in activity_status %}
+
+                        <span class="status-badge status-pending">
+                            {{ activity.status | default("PENDING", true) }}
+                        </span>
+
+                        {% else %}
+
+                        <span class="status-badge status-default">
+                            {{ activity.status | default("UNKNOWN", true) }}
+                        </span>
+
+                        {% endif %}
+
+
+                        {% if activity.created_at %}
+
+                        <span class="whitespace-nowrap text-xs text-slate-400">
+                            {{ activity.created_at }}
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+            </div>
+
+
+            {% else %}
+
+            <div class="px-6 py-14 text-center text-sm text-slate-500">
+                No system activity has been recorded yet.
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =====================================================
+             ADMIN OPERATIONS
+        ====================================================== -->
+
+        <section class="mb-8">
+
+            <div class="mb-5">
+
+                <h3 class="text-xl font-bold text-slate-900">
+                    Operations
+                </h3>
+
+                <p class="mt-1 text-sm text-slate-500">
+                    Access the main business workflow areas.
+                </p>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+
+
+                <!-- BUSINESS REQUEST -->
+
+                <a
+                    href="{{ business_request_url | default('/business-request', true) }}"
+                    class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+                >
+
+                    <div class="flex items-start justify-between">
+
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-xl text-blue-600">
+                            ＋
+                        </div>
+
+                        <span class="text-lg text-slate-300 transition group-hover:translate-x-1 group-hover:text-blue-500">
+                            →
+                        </span>
+
+                    </div>
+
+                    <h4 class="mt-5 font-bold text-slate-900">
+                        Business Requests
+                    </h4>
+
+                    <p class="mt-2 text-sm leading-6 text-slate-500">
+                        Submit and process new business automation requests.
+                    </p>
+
+                </a>
+
+
+                <!-- DOCUMENTS -->
+
+                <a
+                    href="{{ documents_url | default('/documents', true) }}"
+                    class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-violet-200 hover:shadow-lg"
+                >
+
+                    <div class="flex items-start justify-between">
+
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-xl text-violet-600">
+                            ▤
+                        </div>
+
+                        <span class="text-lg text-slate-300 transition group-hover:translate-x-1 group-hover:text-violet-500">
+                            →
+                        </span>
+
+                    </div>
+
+                    <h4 class="mt-5 font-bold text-slate-900">
+                        Document Intelligence
+                    </h4>
+
+                    <p class="mt-2 text-sm leading-6 text-slate-500">
+                        Open the document analysis and intelligence workflow.
+                    </p>
+
+                </a>
+
+
+                <!-- REQUESTS -->
+
+                <a
+                    href="{{ requests_url | default('/requests/', true) }}"
+                    class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg"
+                >
+
+                    <div class="flex items-start justify-between">
+
+                        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-xl text-emerald-600">
+                            ✓
+                        </div>
+
+                        <span class="text-lg text-slate-300 transition group-hover:translate-x-1 group-hover:text-emerald-500">
+                            →
+                        </span>
+
+                    </div>
+
+                    <h4 class="mt-5 font-bold text-slate-900">
+                        Request Processing
+                    </h4>
+
+                    <p class="mt-2 text-sm leading-6 text-slate-500">
+                        View submitted requests and their processing results.
+                    </p>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer class="border-t border-slate-200 py-6">
+
+            <div class="flex flex-col justify-between gap-2 text-xs text-slate-400 sm:flex-row">
+
+                <p>
+                    AI Operations Automation Hub
+                </p>
+
+                <p>
+                    Administrative Dashboard
+                </p>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     CHART JAVASCRIPT
+========================================================= -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    let rawChartData = {{ chart_data | default('{}', true) | safe }};
+
+    let chartData = {};
+
+    try {
+
+        if (typeof rawChartData === "string") {
+            chartData = JSON.parse(rawChartData);
+        } else if (
+            rawChartData &&
+            typeof rawChartData === "object"
+        ) {
+            chartData = rawChartData;
+        }
+
+    } catch (error) {
+
+        console.error("Unable to parse dashboard chart data:", error);
+
+        chartData = {};
+
+    }
+
+
+    if (
+        !chartData ||
+        typeof chartData !== "object"
+    ) {
+        chartData = {};
+    }
+
+
+    function getSection(name) {
+
+        const section = chartData[name];
+
+        if (
+            !section ||
+            typeof section !== "object"
+        ) {
+            return {
+                labels: [],
+                values: []
+            };
+        }
+
+        const labels = Array.isArray(section.labels)
+            ? section.labels
+            : [];
+
+        const values = Array.isArray(section.values)
+            ? section.values.map(function (value) {
+                const number = Number(value);
+                return Number.isFinite(number) ? number : 0;
+            })
+            : [];
+
+        const length = Math.min(
+            labels.length,
+            values.length
+        );
+
+        return {
+            labels: labels.slice(0, length),
+            values: values.slice(0, length)
+        };
+    }
+
+
+    function createChart(
+        elementId,
+        type,
+        sectionName,
+        label,
+        options
+    ) {
+
+        const canvas =
+            document.getElementById(elementId);
+
+        if (!canvas) {
+            return;
+        }
+
+
+        if (
+            typeof Chart === "undefined"
+        ) {
+            console.error(
+                "Chart.js failed to load."
+            );
+            return;
+        }
+
+
+        const section =
+            getSection(sectionName);
+
+
+        const baseOptions = {
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            animation: {
+                duration: 500
+            },
+
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "bottom",
+
+                    labels: {
+                        usePointStyle: true,
+                        padding: 18,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+
+                tooltip: {
+                    enabled: true
+                }
+            }
+        };
+
+
+        if (options) {
+
+            if (
+                options.legend !== undefined
+            ) {
+                baseOptions.plugins.legend.display =
+                    options.legend;
+            }
+
+            if (
+                options.beginAtZero !== undefined
+            ) {
+                baseOptions.scales = {
+                    y: {
+                        beginAtZero:
+                            options.beginAtZero,
+
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                };
+            }
+
+        }
+
+
+        new Chart(canvas, {
+
+            type: type,
+
+            data: {
+
+                labels: section.labels,
+
+                datasets: [
+
+                    {
+
+                        label: label,
+
+                        data: section.values,
+
+                        borderWidth: 2,
+
+                        tension: 0.35,
+
+                        pointRadius:
+                            type === "line"
+                                ? 4
+                                : 0,
+
+                        pointHoverRadius:
+                            type === "line"
+                                ? 6
+                                : 0,
+
+                        fill:
+                            type === "line",
+
+                    }
+
+                ]
+
+            },
+
+            options: baseOptions
+
+        });
+
+    }
+
+
+    createChart(
+        "requestActivityChart",
+        "line",
+        "request_activity",
+        "Requests",
+        {
+            legend: false,
+            beginAtZero: true
+        }
+    );
+
+
+    createChart(
+        "statusChart",
+        "doughnut",
+        "request_status",
+        "Requests",
+        {
+            legend: true
+        }
+    );
+
+
+    createChart(
+        "priorityChart",
+        "bar",
+        "priority",
+        "Requests",
+        {
+            legend: false,
+            beginAtZero: true
+        }
+    );
+
+
+    createChart(
+        "automationChart",
+        "doughnut",
+        "automation",
+        "Automation",
+        {
+            legend: true
+        }
+    );
+
+
+    createChart(
+        "schedulerChart",
+        "bar",
+        "scheduler",
+        "Automations",
+        {
+            legend: false,
+            beginAtZero: true
+        }
+    );
+
+});
+</script>
+
+</body>
+</html>

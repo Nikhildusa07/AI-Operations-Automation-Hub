@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports | AI Business Automation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen">
+<header class="bg-slate-950 text-white">
+<div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+<div><h1 class="text-xl font-bold">AI Business Automation</h1><p class="text-xs text-slate-400">Operational Reports</p></div>
+<div class="flex gap-3 items-center"><span class="text-sm text-slate-400">Admin: {{ admin_username }}</span><a href="/dashboard/" class="px-4 py-2 rounded-lg bg-slate-700 text-sm">Dashboard</a><a href="/auth/logout" class="px-4 py-2 rounded-lg bg-red-600 text-sm">Logout</a></div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-8">
+<h2 class="text-3xl font-bold">Reports</h2>
+<p class="text-slate-500 mt-1 mb-8">Automatically generated operational, weekly and AI performance reports.</p>
+<div class="grid lg:grid-cols-3 gap-6">
+{% for key, report in reports.items() %}
+<section class="bg-white border rounded-2xl p-6 shadow-sm">
+<h3 class="text-xl font-bold">{{ report.report }}</h3>
+<p class="text-xs text-slate-400 mt-1">{{ report.generated_at }}</p>
+<div class="mt-5 space-y-2 text-sm">
+{% for k, v in report.items() if k not in ['report','generated_at','recommendations'] %}
+<div class="flex justify-between gap-4 border-b pb-2"><span class="text-slate-500">{{ k.replace('_',' ').title() }}</span><strong>{{ v }}</strong></div>
+{% endfor %}
+</div>
+{% if report.recommendation %}<p class="mt-5 text-sm bg-blue-50 text-blue-800 rounded-xl p-4">{{ report.recommendation }}</p>{% endif %}
+{% if report.recommendations %}<ul class="mt-5 text-sm list-disc pl-5 text-slate-600">{% for item in report.recommendations %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
+</section>
+{% endfor %}
+</div>
+<div class="mt-8 bg-white border rounded-2xl p-6">
+<h3 class="font-bold text-lg">API endpoints</h3>
+<div class="mt-3 grid md:grid-cols-3 gap-3 text-sm"><a class="text-blue-600" href="/reports/daily">Daily JSON</a><a class="text-blue-600" href="/reports/weekly">Weekly JSON</a><a class="text-blue-600" href="/reports/ai-performance">AI Performance JSON</a></div>
+</div>
+</main>
+</body>
+</html>
